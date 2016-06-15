@@ -1,6 +1,9 @@
 package numberutil
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 var tests = map[int]string{
 	0:       "ноль",
@@ -54,13 +57,28 @@ var tests = map[int]string{
 	999001:  "девятьсот девяносто девять тысяч один",
 	999069:  "девятьсот девяносто девять тысяч шестьдесят девять",
 	999234:  "девятьсот девяносто девять тысяч двести тридцать четыре",
-	999999:  "девятьсот девяносто девять тысяч девять сот девяносто девять",
+	999999:  "девятьсот девяносто девять тысяч девятьсот девяносто девять",
 }
 
 func TestVerbal(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := Verbal(-1)
+	if assert.Error(err) {
+		assert.Equal(err.Error(), "Min number is 0")
+	}
+
+	_, err = Verbal(1000001)
+	if assert.Error(err) {
+		assert.Equal(err.Error(), "Max number is 1000000")
+	}
+
 	for number, verbal := range tests {
-		result := Verbal(number)
-		if result != verbal {
+		if result, err := Verbal(number); result != verbal {
+			if err != nil {
+				t.Error(err)
+			}
+
 			t.Error(
 				"for", number,
 				"expected", verbal,
