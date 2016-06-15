@@ -2,5 +2,5 @@
 package numberutil
 
 func Verbal(number int) string {
-        return ""
+	return ""
 }
