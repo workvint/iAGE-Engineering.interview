@@ -33,7 +33,7 @@ func Verbal(number int) (string, error) {
 				case 6:
 					result = append(result, order7(n))
 				case 5:
-					result = append(result, order6(n))
+					result = append(result, order6(n, number))
 				case 4:
 					result = append(result, order5(n, &number))
 				case 3:
@@ -60,19 +60,19 @@ func Verbal(number int) (string, error) {
 func order7(n int) string {
 	var s string
 
-	switch n {
-	case 1:
-		s = "один миллион"
-	}
+	s = order1(n) + " миллион"
 
 	return s
 }
 
 // Hundreds of thousands
-func order6(n int) string {
+func order6(n int, num int) string {
 	var s string
 
-	s = order3(n) + " тысяч"
+	s = order3(n)
+	if (num/1000)%100 == 0 {
+		s += " тысяч"
+	}
 
 	return s
 }
@@ -81,7 +81,10 @@ func order6(n int) string {
 func order5(n int, num *int) string {
 	var s string
 
-	s = order2(n, num) + " тысяч"
+	s = order2(n, num)
+	if *num/1000 == 0 {
+		s += " тысяч"
+	}
 
 	return s
 }
