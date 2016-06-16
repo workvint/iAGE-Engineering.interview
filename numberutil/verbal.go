@@ -71,6 +71,7 @@ func order6(n int, num int) string {
 
 	s = order3(n)
 	if (num/1000)%100 == 0 {
+		// tens of thousands and thousands not present
 		s += " тысяч"
 	}
 
@@ -82,7 +83,8 @@ func order5(n int, num *int) string {
 	var s string
 
 	s = order2(n, num)
-	if *num/1000 == 0 {
+	if (*num/1000)%10 == 0 {
+		// thousands not present
 		s += " тысяч"
 	}
 
@@ -103,6 +105,7 @@ func order4(n int) string {
 	case 4:
 		s = "четыре тысячи"
 	default:
+		// 5-9 thousands
 		s = order1(n) + " тысяч"
 	}
 
@@ -143,7 +146,17 @@ func order2(n int, num *int) string {
 
 	switch n {
 	case 1:
-		switch *num {
+		numBuffer := *num
+		if *num/1000 > 9 {
+			// get tens thousands from order5
+			numBuffer /= 1000
+			*num %= 1000
+		} else if numBuffer%base < 10 {
+			// 10-19 last tens
+			*num = 0
+		}
+
+		switch numBuffer {
 		case 10:
 			s = "десять"
 		case 11:
@@ -164,10 +177,6 @@ func order2(n int, num *int) string {
 			s = "восемнадцать"
 		case 19:
 			s = "девятнадцать"
-		}
-
-		if *num%base < 10 {
-			*num = 0
 		}
 	case 2:
 		s = "двадцать"
